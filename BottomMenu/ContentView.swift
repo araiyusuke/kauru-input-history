@@ -14,42 +14,44 @@ struct ContentView: View {
     let keyboardMenuHeight: CGFloat = 50
 
     var body: some View {
-
         GeometryReader { geometry in
-
             ZStack(alignment: .bottom) {
-
-                Color.white
-
                 VStack(spacing: 0) {
 
                     keyboardMenu
-                        .frame(width: geometry.size.width, height: keyboardMenuHeight)
+                        .frame(maxWidth: .infinity, maxHeight: keyboardMenuHeight)
 
                     MultiRowEditor(placeFolder: "メモ", value: $viewModel.memo)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 
                 }
-                .ignoresSafeArea(.keyboard)
+                .padding(10)
+                closeButton
+                    .frame(maxWidth: .infinity, maxHeight: keyboardMenuHeight + 300, alignment: .topTrailing)
+                    .padding(.trailing, 10)
+                    .background(Color.gray)
+                    .opacity(keyboard.isShowing ? 1 : 0)
+                    .animation(.easeIn(duration: 0.15), value: keyboard.isShowing)
+                    .onTapGesture {
+                        UIApplication.shared.closeKeyboard()
+                    }
 
-                VStack(spacing: 0) {
-                    Text("テスト")
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity, maxHeight: keyboardMenuHeight)
-                        .background(Color.gray)
-
-                }
-                .opacity(keyboard.isShowing ? 1 : 0)
-                .animation(.easeOut(duration: 1.0), value: keyboard.isShowing)
-
-                .ignoresSafeArea(.container, edges: [.bottom])
             }
+            .ignoresSafeArea(.keyboard)
             .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
         }
         .onAppear{
             self.keyboard.addObserver()
         }.onDisappear {
             self.keyboard.removeObserver()
+        }
+    }
+
+    var closeButton: some View {
+        VStack(spacing: 0) {
+            Text("✖️")
+                .foregroundColor(.white)
+                .frame(height: keyboardMenuHeight)
         }
     }
 
@@ -152,5 +154,11 @@ struct ContentView: View {
             isShowing = false
             height = 0
         }
+    }
+}
+
+extension UIApplication {
+    func closeKeyboard() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
