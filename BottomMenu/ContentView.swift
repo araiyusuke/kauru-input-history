@@ -11,43 +11,55 @@ struct ContentView: View {
 
     @StateObject private var viewModel: ViewModel = ViewModel()
     @ObservedObject var keyboard: KeyboardObserver = KeyboardObserver()
+    let keyboardMenuHeight: CGFloat = 50
 
     var body: some View {
+
         GeometryReader { geometry in
 
             ZStack(alignment: .bottom) {
+
+                Color.white
+
                 VStack(spacing: 0) {
 
-                    
-                    TextField("タイトル", text: $viewModel.title)
-                        .font(.title)
-                        .frame(width: 300, height: 50)
-
+                    keyboardMenu
+                        .frame(width: geometry.size.width, height: keyboardMenuHeight)
 
                     MultiRowEditor(placeFolder: "メモ", value: $viewModel.memo)
-                        .frame(width: 300, height: 400)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-
-                    Spacer()
                 }
                 .ignoresSafeArea(.keyboard)
 
-                VStack {
+                VStack(spacing: 0) {
                     Text("テスト")
                         .foregroundColor(.white)
-                        .frame(maxWidth: .infinity, maxHeight: 50)
+                        .frame(maxWidth: .infinity, maxHeight: keyboardMenuHeight)
+                        .background(Color.gray)
+
                 }
-                .background(Color.gray)
-                .offset(y: -30 )
                 .opacity(keyboard.isShowing ? 1 : 0)
+                .animation(.easeOut(duration: 1.0), value: keyboard.isShowing)
+
                 .ignoresSafeArea(.container, edges: [.bottom])
             }
+            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
         }
         .onAppear{
             self.keyboard.addObserver()
         }.onDisappear {
             self.keyboard.removeObserver()
         }
+    }
+
+    var keyboardMenu: some View {
+        GeometryReader { geometry in
+            TextField("タイトル", text: $viewModel.title)
+                .font(.title)
+                .frame(width: geometry.size.width, height: geometry.size.height)
+        }
+
     }
 
     struct MultiRowEditor: View {
@@ -136,6 +148,7 @@ struct ContentView: View {
         }
 
         @objc func keyboardWillHide(_ notification: Notification) {
+            print("hide")
             isShowing = false
             height = 0
         }
