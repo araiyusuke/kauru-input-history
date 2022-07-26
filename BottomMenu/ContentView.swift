@@ -14,20 +14,21 @@ struct ContentView: View {
     let keyboardMenuHeight: CGFloat = 50
 
     var body: some View {
+
         GeometryReader { geometry in
+
             ZStack(alignment: .bottom) {
+
                 VStack(spacing: 0) {
 
-                    titleInput
+                    titleTextFeild
                         .frame(maxWidth: .infinity, maxHeight: 30)
 
-                    MultiRowEditor(placeFolder: "メモ", value: $viewModel.memo)
-
+                    TextEditorPlaceFolder(placeFolder: "メモ", value: $viewModel.memo)
                         .frame(
                             maxWidth: .infinity,
                             maxHeight: .infinity
                         )
-                        .background(Color.gray.opacity(0.3))
 
                     Spacer(minLength: keyboard.isShowing ? 300 : 0)
 
@@ -43,8 +44,6 @@ struct ContentView: View {
                     .onTapGesture {
                         UIApplication.shared.closeKeyboard()
                     }
-
-
 
             }
             // 本来であればキーボードの高さが下部から突き出るのを無視する
@@ -68,61 +67,59 @@ struct ContentView: View {
         }
     }
 
-    var titleInput: some View {
+    var titleTextFeild: some View {
         GeometryReader { geometry in
             TextField("タイトル", text: $viewModel.title)
                 .font(.title)
                 .frame(width: geometry.size.width, height: geometry.size.height)
         }
-
     }
 
-    struct MultiRowEditor: View {
+    struct TextEditorPlaceFolder: View {
 
         enum Field {
             case textField
             case textEditor
         }
 
+        @StateObject var keyboard: KeyboardObserver = KeyboardObserver()
         let placeFolder: String
-        @FocusState var focusState: Field?
+        @FocusState var onFocus: Field?
         @Binding var value: String
 
+        @State var isTouch: Bool = false
         init(placeFolder: String, value:  Binding<String>) {
             self.placeFolder = placeFolder
             self._value = value
         }
 
         var body: some View {
-
             GeometryReader { geometry in
-
                 ZStack(alignment: .topLeading) {
-
                     if value.isEmpty {
-                        Text(value)
+                        TextField(placeFolder, text: Binding.constant(""))
                             .font(.body)
-                        //                            .focused($focusState, equals: .textField)
-                            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
-                            .background(Color.white)
-                            .onTapGesture {
-                                value = "1"
-                            }
-
-                    } else {
-                        TextEditor(text: $value)
-                            .font(.body)
-                            .focused($focusState, equals: .textEditor)
-                            .padding(-5)
-                            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
-                            .onAppear() {
-                                focusState = .textEditor
-                            }
                     }
-
+                    TextEditor(text: $value)
+                        .font(.body)
+                        .focused($onFocus, equals: .textEditor)
+                        .padding(-5)
+                        .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
+                        .onAppear() {
+                            onFocus = .textEditor
+                        }
+                    //                    }
+                }
+                .onAppear{
+                    self.keyboard.addObserver()
+                }.onDisappear {
+                    self.keyboard.removeObserver()
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .leading)
-                .ignoresSafeArea(.keyboard)
+                .onTapGesture {
+                    self.isTouch = true
+                    onFocus = .textEditor
+                }
                 .onAppear() {
                     UITextView.appearance().backgroundColor = .clear
                 }
