@@ -12,6 +12,7 @@
 		F1ACDAD6288E0E5200A73261 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1ACDAD5288E0E5200A73261 /* Assets.xcassets */; };
 		F1ACDAD9288E0E5200A73261 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1ACDAD8288E0E5200A73261 /* Preview Assets.xcassets */; };
 		F1ACDAE0288E0F2600A73261 /* BottomMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ACDADF288E0F2600A73261 /* BottomMenuViewModel.swift */; };
+		F1ACDAE2288FDDC900A73261 /* TextEditorPlaceFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ACDAE1288FDDC900A73261 /* TextEditorPlaceFolder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		F1ACDAD5288E0E5200A73261 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F1ACDAD8288E0E5200A73261 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F1ACDADF288E0F2600A73261 /* BottomMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomMenuViewModel.swift; sourceTree = "<group>"; };
+		F1ACDAE1288FDDC900A73261 /* TextEditorPlaceFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditorPlaceFolder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 				F1ACDAD5288E0E5200A73261 /* Assets.xcassets */,
 				F1ACDAD7288E0E5200A73261 /* Preview Content */,
 				F1ACDADF288E0F2600A73261 /* BottomMenuViewModel.swift */,
+				F1ACDAE1288FDDC900A73261 /* TextEditorPlaceFolder.swift */,
 			);
 			path = BottomMenu;
 			sourceTree = "<group>";
@@ -143,6 +146,7 @@
 				F1ACDAE0288E0F2600A73261 /* BottomMenuViewModel.swift in Sources */,
 				F1ACDAD4288E0E5000A73261 /* ContentView.swift in Sources */,
 				F1ACDAD2288E0E5000A73261 /* BottomMenuApp.swift in Sources */,
+				F1ACDAE2288FDDC900A73261 /* TextEditorPlaceFolder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,7 +203,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -253,7 +257,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
