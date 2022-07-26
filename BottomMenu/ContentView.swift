@@ -18,27 +18,40 @@ struct ContentView: View {
             ZStack(alignment: .bottom) {
                 VStack(spacing: 0) {
 
-                    keyboardMenu
-                        .frame(maxWidth: .infinity, maxHeight: keyboardMenuHeight)
+                    titleInput
+                        .frame(maxWidth: .infinity, maxHeight: 30)
 
                     MultiRowEditor(placeFolder: "メモ", value: $viewModel.memo)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                        .frame(
+                            maxWidth: .infinity,
+                            maxHeight: .infinity
+                        )
+                        .background(Color.gray.opacity(0.3))
+
+                    Spacer(minLength: keyboard.isShowing ? 300 : 0)
 
                 }
-                .padding(10)
+
                 closeButton
-                    .frame(maxWidth: .infinity, maxHeight: keyboardMenuHeight + 300, alignment: .topTrailing)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: keyboardMenuHeight + 300, alignment: .topTrailing)
                     .padding(.trailing, 10)
                     .background(Color.gray)
                     .opacity(keyboard.isShowing ? 1 : 0)
-                    .animation(.easeIn(duration: 0.15), value: keyboard.isShowing)
                     .onTapGesture {
                         UIApplication.shared.closeKeyboard()
                     }
 
+
+
             }
-            .ignoresSafeArea(.keyboard)
-            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
+            // 本来であればキーボードの高さが下部から突き出るのを無視する
+            //            .ignoresSafeArea(.keyboard, edges:  keyboard.isShowing ? [] : [.bottom])
+            .ignoresSafeArea(.keyboard,  edges: keyboard.isShowing  ?  [.bottom] : [] )
+
+            //            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
         }
         .onAppear{
             self.keyboard.addObserver()
@@ -55,7 +68,7 @@ struct ContentView: View {
         }
     }
 
-    var keyboardMenu: some View {
+    var titleInput: some View {
         GeometryReader { geometry in
             TextField("タイトル", text: $viewModel.title)
                 .font(.title)
@@ -87,10 +100,14 @@ struct ContentView: View {
                 ZStack(alignment: .topLeading) {
 
                     if value.isEmpty {
-                        TextField(placeFolder, text: $value)
+                        Text(value)
                             .font(.body)
-                            .focused($focusState, equals: .textField)
+                        //                            .focused($focusState, equals: .textField)
                             .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
+                            .background(Color.white)
+                            .onTapGesture {
+                                value = "1"
+                            }
 
                     } else {
                         TextEditor(text: $value)
@@ -104,7 +121,7 @@ struct ContentView: View {
                     }
 
                 }
-                .frame(width: geometry.size.width, alignment: .leading)
+                .frame(width: geometry.size.width, height: geometry.size.height, alignment: .leading)
                 .ignoresSafeArea(.keyboard)
                 .onAppear() {
                     UITextView.appearance().backgroundColor = .clear
@@ -113,7 +130,6 @@ struct ContentView: View {
                     UITextView.appearance().backgroundColor = nil
                 }
             }
-
         }
     }
 
@@ -150,13 +166,11 @@ struct ContentView: View {
         }
 
         @objc func keyboardWillHide(_ notification: Notification) {
-            print("hide")
             isShowing = false
             height = 0
         }
     }
 }
-
 extension UIApplication {
     func closeKeyboard() {
         sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
