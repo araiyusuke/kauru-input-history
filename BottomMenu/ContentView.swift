@@ -25,7 +25,7 @@ struct ContentView: View {
         bottom: 0,
         trailing: 0
     )
-    var isShowBottomSheets: Bool {
+    var isShowAboveKeyBoard: Bool {
         return keyboard.isShowing
     }
 
@@ -38,7 +38,7 @@ struct ContentView: View {
                 formList
 
                 VStack(spacing: 0) {
-                    textFieldAboveBoard
+                    textFieldAboveKeyboard
                         .frame(
                             // ここの高さを変える
                             maxHeight: keyboardHeight + keyboardMenuHeight + (viewModel.suggestions.count > 0 ? 100 : 0),
@@ -48,7 +48,8 @@ struct ContentView: View {
                             onFocus = .input
                         }
                 }
-                .opacity(isShowBottomSheets || viewModel.inputText.isEmpty == false  ? 1 : 0)
+                // キーボードが表示されている、未入力でない場合はキーボードの上に入力欄を表示する
+                .opacity(isShowAboveKeyBoard  ? 1 : 0)
                 .frame(maxHeight: .infinity, alignment: .bottom)
                 .background(Color.gray.opacity(keyboard.isShowing ? 0.3 : 0))
                 .onTapGesture {
@@ -86,7 +87,7 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
-    var textFieldAboveBoard: some View {
+    var textFieldAboveKeyboard: some View {
 
         VStack(spacing: 0) {
 
@@ -140,17 +141,13 @@ struct ContentView: View {
                                 .listRowInsets(resetEdgeInsets)
                             ) {
                                 ForEach(0..<viewModel.suggestions.count, id: \.self) { index in
-                                    HStack {
-                                        Text(viewModel.suggestions[index].0)
-                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                            .font(.callout)
-                                        Spacer()
-                                    }
-                                    .contentShape(Rectangle())
-                                    .onTapGesture {
-                                        viewModel.inputText = viewModel.suggestions[index].0
-                                        UIApplication.shared.closeKeyboard()
-                                    }
+                                    Text(viewModel.suggestions[index].1)
+                                        .font(.callout)
+                                        .contentShape(Rectangle())
+                                        .onTapGesture {
+                                            viewModel.inputText = viewModel.suggestions[index].0
+                                            UIApplication.shared.closeKeyboard()
+                                        }
                                 }
                             }
                         }
