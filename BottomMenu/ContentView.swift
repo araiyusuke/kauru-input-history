@@ -9,6 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
 
+    init() {
+        if #available(iOS 15, *) {
+            UITableView.appearance().sectionHeaderTopPadding = 0
+        }
+    }
+    
     enum FocusTextFields {
         case input
     }
