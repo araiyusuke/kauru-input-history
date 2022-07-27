@@ -15,54 +15,26 @@ struct ContentView: View {
     let keyboardMenuHeight: CGFloat = 140
     let safeAreaHeight: CGFloat = 34
     let keyboardHeight: CGFloat = 336
+
     var body: some View {
+
         GeometryReader { geometry in
 
             ZStack(alignment: .bottom) {
 
-                VStack(spacing: 0) {
+                formList
 
-                    titleTextFeild
-                        .frame(maxWidth: .infinity, maxHeight: 30)
-                        .onTapGesture {
-                            print(" keyboard.height \(keyboard.height)")
-                        }
-
-                    TextEditorPlaceFolder(placeFolder: "メモ", value: $viewModel.memo)
-                        .frame(
-                            maxWidth: .infinity,
-                            maxHeight: .infinity
-                        )
-
-                    ZStack {
-                        Text("test")
-                    }
-                    .frame(height:keyboardHeight - safeAreaHeight + keyboardMenuHeight)
-
-                }
-
-
-                closeButton
+                inpuTextBttomSheet
                     .frame(
-                        maxWidth: .infinity,
-                        maxHeight: keyboardHeight - safeAreaHeight + keyboardMenuHeight,
-                        alignment: .topTrailing)
+                        maxWidth: .infinity, maxHeight: 300,
+                                       alignment: .topTrailing)
                     .background(RoundedCorners(color: Color.rgb(241, 241,243), tl: 20, tr: 20, bl: 0, br: 0))
 
 
-                    .opacity(keyboard.isShowing ? 1 : 0)
-                    .onTapGesture {
-                        print(keyboard.height)
-                        print(geometry.size.height)
-                        print(geometry.safeAreaInsets.top)
-                        print(geometry.safeAreaInsets.bottom)
-//                        UIApplication.shared.closeKeyboard()
-                    }
             }
             .ignoresSafeArea(.keyboard,  edges: keyboard.isShowing  ?  [.bottom] : [] )
             .frame(maxHeight: .infinity)
-            .background(Color.black)
-
+            .background(Color.white)
         }
         .onAppear{
             self.keyboard.addObserver()
@@ -71,8 +43,23 @@ struct ContentView: View {
         }
     }
 
+    var formList: some View {
+        VStack(spacing: 10) {
+            List {
+                ForEach(1..<25, id: \.self) { index in
+                    titleTextFeild
+                        .frame(maxWidth: .infinity, maxHeight: 30)
+                }
+            }
+            // リストのフォーマットをリセット
+            .listStyle(.plain)
 
-    var closeButton: some View {
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+
+    var inpuTextBttomSheet: some View {
+
         VStack {
 
             Text("路線名・駅名")
@@ -85,11 +72,10 @@ struct ContentView: View {
                 .padding(.leading, 5)
                 .frame(maxWidth: .infinity, maxHeight: 40, alignment: .leading)
                 .background(Color.white)
-
                 .overlay(
                     RoundedRectangle(cornerRadius: 4)
                         .stroke(Color.blue, lineWidth: 1)
-                           )
+                )
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: keyboardMenuHeight)
@@ -98,8 +84,10 @@ struct ContentView: View {
     var titleTextFeild: some View {
         GeometryReader { geometry in
             TextField("タイトル", text: $viewModel.title)
+                .foregroundColor(.black)
                 .font(.title)
                 .frame(width: geometry.size.width, height: geometry.size.height)
+                .background(Color.gray)
         }
     }
 
@@ -115,7 +103,7 @@ extension Color {
         return Color(red: red / 255, green: green / 255, blue: blue / 255, opacity: alpha)
     }
 }
-                                
+
 extension UIApplication {
     func closeKeyboard() {
         sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
