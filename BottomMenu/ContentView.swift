@@ -24,6 +24,11 @@ struct ContentView: View {
     var isShowBottomSheets: Bool {
         return keyboard.isShowing
     }
+    init() {
+        if #available(iOS 15, *) {
+            UITableView.appearance().sectionHeaderTopPadding = 0
+        }
+    }
 
     var body: some View {
 
@@ -34,7 +39,6 @@ struct ContentView: View {
                 formList
 
                 VStack(spacing: 0) {
-
                     inpuTextBttomSheet
                         .frame(
                             maxHeight: keyboardHeight + keyboardMenuHeight,                                           alignment: .topTrailing)
@@ -79,47 +83,70 @@ struct ContentView: View {
 
     var inpuTextBttomSheet: some View {
 
-        VStack {
+        VStack(spacing: 0) {
 
-            Text("路線名・駅名")
-                .font(.headline)
-                .foregroundColor(.black)
-                .frame(maxWidth: .infinity, maxHeight: 30, alignment: .leading)
-                .onTapGesture {
-                    UIApplication.shared.closeKeyboard()
-                }
-            TextField("駅名を入力して下さい", text: $inputText)
-                .foregroundColor(Color.black)
-                .focused($onFocus, equals: .input)
-                .padding(.leading, 5)
-                .frame(maxWidth: .infinity, maxHeight: 40, alignment: .leading)
-                .background(Color.white)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 4)
-                        .stroke(Color.blue, lineWidth: 1)
-                )
+            VStack {
+                Text("路線名・駅名")
+                    .font(.caption)
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity, maxHeight: 30, alignment: .leading)
+                    .onTapGesture {
+                        UIApplication.shared.closeKeyboard()
+                    }
+                TextField("駅名を入力して下さい", text: $inputText)
+                    .foregroundColor(Color.black)
+                    .focused($onFocus, equals: .input)
+                    .padding(.leading, 5)
+                    .frame(maxWidth: .infinity, maxHeight: 40, alignment: .leading)
+                    .background(Color.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 4)
+                            .stroke(Color.blue, lineWidth: 1)
+                    )
+            }
+            .padding()
 
             if (inputText.count == 5 || keyboard.isShowing == false) {
-                VStack(spacing: 10) {
-                    VStack {
-                        ForEach(1..<10, id: \.self) { index in
-                            Text("+")
-                                .frame(maxWidth: .infinity, maxHeight: 30)
-                                .onTapGesture {
-                                    self.onFocus = .input
+
+                VStack(spacing: 0) {
+
+                    VStack(spacing: 0) {
+
+                        List() {
+                            Section(header: Text("候補")
+                                .font(.caption)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity, maxHeight: 30, alignment: .leading)
+                                .padding(.leading, 10)
+                                .background(Color.rgb(56, 67, 85))
+                                .listRowInsets(
+                                    EdgeInsets(top: 0,
+                                               leading: 0,
+                                               bottom: 0,
+                                               trailing: 0
+                                              )
+                                )
+                            ) {
+
+                                ForEach(1..<10, id: \.self) { index in
+                                    Text("テスト")
+                                        .font(.callout)
+                                        .onTapGesture {
+                                            self.onFocus = .input
+                                        }
                                 }
+                                
+                            }
                         }
+                        .listStyle(.plain)
+                        .listStyle(GroupedListStyle())
                     }
-                    .frame(height: 100, alignment: .top)
-                    // リストのフォーマットをリセット
-                    .listStyle(.plain)
+                    .environment(\.defaultMinListRowHeight, 47)
+                    .frame(maxHeight: .infinity, alignment: .top)
 
                 }
-
             }
         }
-        .padding()
-//        .frame(maxWidth: .infinity, maxHeight: keyboardMenuHeight)
     }
 
     var titleTextFeild: some View {

@@ -19,20 +19,24 @@ struct TextEditorPlaceFolder: View {
     @FocusState var onFocus: Field?
     @Binding var value: String
     @State var isTouch: Bool = false
+
     init(placeFolder: String, value:  Binding<String>) {
         self.placeFolder = placeFolder
         self._value = value
     }
 
     var body: some View {
+
         GeometryReader { geometry in
+
             ZStack(alignment: .topLeading) {
+                
                 if value.isEmpty {
                     TextField(placeFolder, text: Binding.constant(""))
                         .foregroundColor(.white)
                         .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
-
                 }
+
                 TextEditor(text: $value)
                     .font(.body)
                     .focused($onFocus, equals: .textEditor)
