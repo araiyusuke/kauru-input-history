@@ -13,6 +13,7 @@
 		F1ACDAD9288E0E5200A73261 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1ACDAD8288E0E5200A73261 /* Preview Assets.xcassets */; };
 		F1ACDAE0288E0F2600A73261 /* BottomMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ACDADF288E0F2600A73261 /* BottomMenuViewModel.swift */; };
 		F1ACDAE2288FDDC900A73261 /* TextEditorPlaceFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ACDAE1288FDDC900A73261 /* TextEditorPlaceFolder.swift */; };
+		F1ACDAE42891014A00A73261 /* RoundedCorners.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ACDAE32891014A00A73261 /* RoundedCorners.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		F1ACDAD8288E0E5200A73261 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F1ACDADF288E0F2600A73261 /* BottomMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomMenuViewModel.swift; sourceTree = "<group>"; };
 		F1ACDAE1288FDDC900A73261 /* TextEditorPlaceFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditorPlaceFolder.swift; sourceTree = "<group>"; };
+		F1ACDAE32891014A00A73261 /* RoundedCorners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorners.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 				F1ACDAD7288E0E5200A73261 /* Preview Content */,
 				F1ACDADF288E0F2600A73261 /* BottomMenuViewModel.swift */,
 				F1ACDAE1288FDDC900A73261 /* TextEditorPlaceFolder.swift */,
+				F1ACDAE32891014A00A73261 /* RoundedCorners.swift */,
 			);
 			path = BottomMenu;
 			sourceTree = "<group>";
@@ -143,6 +146,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1ACDAE42891014A00A73261 /* RoundedCorners.swift in Sources */,
 				F1ACDAE0288E0F2600A73261 /* BottomMenuViewModel.swift in Sources */,
 				F1ACDAD4288E0E5000A73261 /* ContentView.swift in Sources */,
 				F1ACDAD2288E0E5000A73261 /* BottomMenuApp.swift in Sources */,
