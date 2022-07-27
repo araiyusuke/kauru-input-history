@@ -9,19 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
 
-    private static let stations: [(String, String)] = [
-        ("まちだ", "町田"),
-        ("いくた", "生田"),
-        ("ゆりがおか", "百合ヶ丘"),
-        ("しんゆりがおか", "新百合ヶ丘"),
-        ("かきお", "柿生"),
-        ("つるかわ", "鶴川"),
-        ("たまがわがくえん", "玉川学園"),
-        ("まちだ", "町田"),
-        ("さがみおおの", "相模大野")
-
-    ]
-
     enum FocusTextFields {
         case input
     }
@@ -29,21 +16,17 @@ struct ContentView: View {
     @StateObject private var viewModel: ViewModel = ViewModel()
     @ObservedObject var keyboard: KeyboardObserver = KeyboardObserver()
     @FocusState var onFocus: FocusTextFields?
-    @State var inputText: String = ""
     let keyboardMenuHeight: CGFloat = 140
     let safeAreaHeight: CGFloat = 34
     let keyboardHeight: CGFloat = 336
-
+    let resetEdgeInsets = EdgeInsets(
+        top: 0,
+        leading: 0,
+        bottom: 0,
+        trailing: 0
+    )
     var isShowBottomSheets: Bool {
         return keyboard.isShowing
-    }
-
-    @State var suggestions: [(String, String)] = []
-
-    init() {
-        if #available(iOS 15, *) {
-            UITableView.appearance().sectionHeaderTopPadding = 0
-        }
     }
 
     var body: some View {
@@ -55,17 +38,17 @@ struct ContentView: View {
                 formList
 
                 VStack(spacing: 0) {
-                    inpuTextBttomSheet
+                    textFieldAboveBoard
                         .frame(
                             // ここの高さを変える
-                            maxHeight: keyboardHeight + keyboardMenuHeight + (suggestions.count > 0 ? 100 : 0),
+                            maxHeight: keyboardHeight + keyboardMenuHeight + (viewModel.suggestions.count > 0 ? 100 : 0),
                             alignment: .topTrailing)
                         .background(RoundedCorners(color: Color.rgb(241, 241,243), tl: 20, tr: 20, bl: 0, br: 0))
                         .onTapGesture {
                             onFocus = .input
                         }
                 }
-                .opacity(isShowBottomSheets || inputText.isEmpty == false  ? 1 : 0)
+                .opacity(isShowBottomSheets || viewModel.inputText.isEmpty == false  ? 1 : 0)
                 .frame(maxHeight: .infinity, alignment: .bottom)
                 .background(Color.gray.opacity(keyboard.isShowing ? 0.3 : 0))
                 .onTapGesture {
@@ -88,8 +71,10 @@ struct ContentView: View {
         VStack(spacing: 10) {
             List {
                 ForEach(1..<25, id: \.self) { index in
-                    Text("入力テスト")
+                    Text("テスト")
                         .frame(maxWidth: .infinity, maxHeight: 30)
+                        // タップのエリアを広げる
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             self.onFocus = .input
                         }
@@ -101,7 +86,7 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
-    var inpuTextBttomSheet: some View {
+    var textFieldAboveBoard: some View {
 
         VStack(spacing: 0) {
 
@@ -116,27 +101,14 @@ struct ContentView: View {
                     }
 
                 TextField(
-                    "駅名を入力して下さい", text: $inputText,
-                          onEditingChanged: { isBegin in
-
-                              print("onEditing")
-                            if isBegin {
-                                print(self.inputText)
-                            } else {
-                                print(self.inputText)
-                            }
-                        },
-                        onCommit: {
-                            let filterRes = Self.stations.filter { $0.0.contains(self.inputText) }
-                        }
+                    "駅名を入力して下さい", text: $viewModel.inputText
                 )
-                .onChange(of: inputText) { newValue in
-
-                    let res = Self.stations.filter { $0.0.contains(self.inputText) }
+                .onChange(of: viewModel.inputText) { newValue in
+                    let res = Self.stations.filter { $0.0.contains(viewModel.inputText) }
                     if res.count > 0 {
-                        suggestions = res
+                        viewModel.suggestions = res
                     } else {
-                        suggestions = []
+                        viewModel.suggestions = []
                     }
                 }
                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -152,47 +124,42 @@ struct ContentView: View {
             }
             .padding()
 
-//            if (inputText.count == 5 || keyboard.isShowing == false) {
-            if (suggestions.count > 0) {
+            if (viewModel.suggestions.count > 0) {
 
                 VStack(spacing: 0) {
 
                     VStack(spacing: 0) {
 
-                        List() {
+                        List {
                             Section(header: Text("候補")
                                 .font(.caption)
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity, maxHeight: 30, alignment: .leading)
                                 .padding(.leading, 10)
                                 .background(Color.rgb(56, 67, 85))
-                                .listRowInsets(
-                                    EdgeInsets(
-                                        top: 0,
-                                        leading: 0,
-                                        bottom: 0,
-                                        trailing: 0
-                                    )
-                                )
+                                .listRowInsets(resetEdgeInsets)
                             ) {
-                                ForEach(0..<suggestions.count, id: \.self) { index in
-                                    Text(suggestions[index].0)
-                                        .frame(maxHeight: .infinity)
-                                        .font(.callout)
-                                        .onTapGesture {
-                                        }
+                                ForEach(0..<viewModel.suggestions.count, id: \.self) { index in
+                                    HStack {
+                                        Text(viewModel.suggestions[index].0)
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                            .font(.callout)
+                                        Spacer()
+                                    }
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        viewModel.inputText = viewModel.suggestions[index].0
+                                        UIApplication.shared.closeKeyboard()
+                                    }
                                 }
                             }
                         }
                         .listStyle(.plain)
                         .listStyle(GroupedListStyle())
-
-
                     }
                     .environment(\.defaultMinListRowHeight, 47)
                 }
             }
-            
         }
     }
 
@@ -224,41 +191,3 @@ extension UIApplication {
         sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
-
-class KeyboardObserver: ObservableObject {
-    @Published var isShowing = false
-    @Published var height: CGFloat = 0
-
-    func addObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-
-    func removeObserver() {
-        NotificationCenter.default.removeObserver(self,name: UIResponder.keyboardWillShowNotification,object: nil)
-        NotificationCenter.default.removeObserver(self,name: UIResponder.keyboardWillHideNotification,object: nil)
-    }
-
-    @objc func keyboardWillShow(_ notification: Notification) {
-        isShowing = true
-        guard let userInfo = notification.userInfo as? [String: Any] else {
-            return
-        }
-        guard let keyboardInfo = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {
-            return
-        }
-        let keyboardSize = keyboardInfo.cgRectValue.size
-        print(height)
-        print(UIScreen.main.bounds.size.height)
-        height = keyboardSize.height
-    }
-
-    @objc func keyboardWillHide(_ notification: Notification) {
-        isShowing = false
-        height = 0
-    }
-}
-
-
-
-

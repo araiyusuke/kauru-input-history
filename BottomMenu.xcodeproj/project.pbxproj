@@ -14,6 +14,8 @@
 		F1ACDAE0288E0F2600A73261 /* BottomMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ACDADF288E0F2600A73261 /* BottomMenuViewModel.swift */; };
 		F1ACDAE2288FDDC900A73261 /* TextEditorPlaceFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ACDAE1288FDDC900A73261 /* TextEditorPlaceFolder.swift */; };
 		F1ACDAE42891014A00A73261 /* RoundedCorners.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ACDAE32891014A00A73261 /* RoundedCorners.swift */; };
+		F1ACDAE62891F5C400A73261 /* ContentView+MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ACDAE52891F5C400A73261 /* ContentView+MockData.swift */; };
+		F1ACDAE82891F7AA00A73261 /* KeyboardObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ACDAE72891F7AA00A73261 /* KeyboardObserver.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,8 @@
 		F1ACDADF288E0F2600A73261 /* BottomMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomMenuViewModel.swift; sourceTree = "<group>"; };
 		F1ACDAE1288FDDC900A73261 /* TextEditorPlaceFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditorPlaceFolder.swift; sourceTree = "<group>"; };
 		F1ACDAE32891014A00A73261 /* RoundedCorners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorners.swift; sourceTree = "<group>"; };
+		F1ACDAE52891F5C400A73261 /* ContentView+MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+MockData.swift"; sourceTree = "<group>"; };
+		F1ACDAE72891F7AA00A73261 /* KeyboardObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +68,8 @@
 				F1ACDADF288E0F2600A73261 /* BottomMenuViewModel.swift */,
 				F1ACDAE1288FDDC900A73261 /* TextEditorPlaceFolder.swift */,
 				F1ACDAE32891014A00A73261 /* RoundedCorners.swift */,
+				F1ACDAE52891F5C400A73261 /* ContentView+MockData.swift */,
+				F1ACDAE72891F7AA00A73261 /* KeyboardObserver.swift */,
 			);
 			path = BottomMenu;
 			sourceTree = "<group>";
@@ -146,7 +152,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1ACDAE62891F5C400A73261 /* ContentView+MockData.swift in Sources */,
 				F1ACDAE42891014A00A73261 /* RoundedCorners.swift in Sources */,
+				F1ACDAE82891F7AA00A73261 /* KeyboardObserver.swift in Sources */,
 				F1ACDAE0288E0F2600A73261 /* BottomMenuViewModel.swift in Sources */,
 				F1ACDAD4288E0E5000A73261 /* ContentView.swift in Sources */,
 				F1ACDAD2288E0E5000A73261 /* BottomMenuApp.swift in Sources */,

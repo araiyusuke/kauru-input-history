@@ -10,4 +10,7 @@ import Foundation
 class ViewModel : ObservableObject {
     @Published var title: String =  ""
     @Published var memo: String =  ""
+    @Published var inputText: String = ""
+    @Published var suggestions: [(String, String)] = []
+
 }
