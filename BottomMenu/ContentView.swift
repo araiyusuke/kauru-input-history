@@ -9,6 +9,19 @@ import SwiftUI
 
 struct ContentView: View {
 
+    private static let stations: [(String, String)] = [
+        ("まちだ", "町田"),
+        ("いくた", "生田"),
+        ("ゆりがおか", "百合ヶ丘"),
+        ("しんゆりがおか", "新百合ヶ丘"),
+        ("かきお", "柿生"),
+        ("つるかわ", "鶴川"),
+        ("たまがわがくえん", "玉川学園"),
+        ("まちだ", "町田"),
+        ("さがみおおの", "相模大野")
+
+    ]
+
     enum FocusTextFields {
         case input
     }
@@ -24,6 +37,9 @@ struct ContentView: View {
     var isShowBottomSheets: Bool {
         return keyboard.isShowing
     }
+
+    @State var suggestions: [(String, String)] = []
+
     init() {
         if #available(iOS 15, *) {
             UITableView.appearance().sectionHeaderTopPadding = 0
@@ -41,7 +57,9 @@ struct ContentView: View {
                 VStack(spacing: 0) {
                     inpuTextBttomSheet
                         .frame(
-                            maxHeight: keyboardHeight + keyboardMenuHeight,                                           alignment: .topTrailing)
+                            // ここの高さを変える
+                            maxHeight: keyboardHeight + keyboardMenuHeight + (suggestions.count > 0 ? 100 : 0),
+                            alignment: .topTrailing)
                         .background(RoundedCorners(color: Color.rgb(241, 241,243), tl: 20, tr: 20, bl: 0, br: 0))
                         .onTapGesture {
                             onFocus = .input
@@ -50,6 +68,9 @@ struct ContentView: View {
                 .opacity(isShowBottomSheets || inputText.isEmpty == false  ? 1 : 0)
                 .frame(maxHeight: .infinity, alignment: .bottom)
                 .background(Color.gray.opacity(keyboard.isShowing ? 0.3 : 0))
+                .onTapGesture {
+                    UIApplication.shared.closeKeyboard()
+                }
             }
             .ignoresSafeArea(.keyboard,  edges: keyboard.isShowing  ?  [.bottom] : [] )
             .ignoresSafeArea(edges: [.bottom])  // 下端と右端を拡張
@@ -76,7 +97,6 @@ struct ContentView: View {
             }
             // リストのフォーマットをリセット
             .listStyle(.plain)
-
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
@@ -86,6 +106,7 @@ struct ContentView: View {
         VStack(spacing: 0) {
 
             VStack {
+
                 Text("路線名・駅名")
                     .font(.caption)
                     .foregroundColor(.black)
@@ -93,20 +114,46 @@ struct ContentView: View {
                     .onTapGesture {
                         UIApplication.shared.closeKeyboard()
                     }
-                TextField("駅名を入力して下さい", text: $inputText)
-                    .foregroundColor(Color.black)
-                    .focused($onFocus, equals: .input)
-                    .padding(.leading, 5)
-                    .frame(maxWidth: .infinity, maxHeight: 40, alignment: .leading)
-                    .background(Color.white)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 4)
-                            .stroke(Color.blue, lineWidth: 1)
-                    )
+
+                TextField(
+                    "駅名を入力して下さい", text: $inputText,
+                          onEditingChanged: { isBegin in
+
+                              print("onEditing")
+                            if isBegin {
+                                print(self.inputText)
+                            } else {
+                                print(self.inputText)
+                            }
+                        },
+                        onCommit: {
+                            let filterRes = Self.stations.filter { $0.0.contains(self.inputText) }
+                        }
+                )
+                .onChange(of: inputText) { newValue in
+
+                    let res = Self.stations.filter { $0.0.contains(self.inputText) }
+                    if res.count > 0 {
+                        suggestions = res
+                    } else {
+                        suggestions = []
+                    }
+                }
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .foregroundColor(Color.black)
+                .focused($onFocus, equals: .input)
+                .padding(.leading, 5)
+                .frame(maxWidth: .infinity, maxHeight: 40, alignment: .leading)
+                .background(Color.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(Color.blue, lineWidth: 1)
+                )
             }
             .padding()
 
-            if (inputText.count == 5 || keyboard.isShowing == false) {
+//            if (inputText.count == 5 || keyboard.isShowing == false) {
+            if (suggestions.count > 0) {
 
                 VStack(spacing: 0) {
 
@@ -120,32 +167,32 @@ struct ContentView: View {
                                 .padding(.leading, 10)
                                 .background(Color.rgb(56, 67, 85))
                                 .listRowInsets(
-                                    EdgeInsets(top: 0,
-                                               leading: 0,
-                                               bottom: 0,
-                                               trailing: 0
-                                              )
+                                    EdgeInsets(
+                                        top: 0,
+                                        leading: 0,
+                                        bottom: 0,
+                                        trailing: 0
+                                    )
                                 )
                             ) {
-
-                                ForEach(1..<10, id: \.self) { index in
-                                    Text("テスト")
+                                ForEach(0..<suggestions.count, id: \.self) { index in
+                                    Text(suggestions[index].0)
+                                        .frame(maxHeight: .infinity)
                                         .font(.callout)
                                         .onTapGesture {
-                                            self.onFocus = .input
                                         }
                                 }
-                                
                             }
                         }
                         .listStyle(.plain)
                         .listStyle(GroupedListStyle())
+
+
                     }
                     .environment(\.defaultMinListRowHeight, 47)
-                    .frame(maxHeight: .infinity, alignment: .top)
-
                 }
             }
+            
         }
     }
 
